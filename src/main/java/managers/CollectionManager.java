@@ -141,7 +141,7 @@ public class CollectionManager implements Executer {
     public Response sumOfDiscountCommand(Scanner scanner) {
         long sumOfDiscount = 0;
         for (Ticket ticket : tickets) {
-            sumOfDiscount += ticket.getDiscount();
+            sumOfDiscount += ticket.getDiscount() != null ? ticket.getDiscount().longValue():0;
         }
         return new Response("Сумма скидок всех эллементов: " + sumOfDiscount);
     }
@@ -172,7 +172,7 @@ public class CollectionManager implements Executer {
             Float price = Float.parseFloat(parameter);
             for (Ticket ticket : tickets) {
                 if (ticket.getPrice().equals(price)) {
-                    info += ticket + "\n\n";
+                    info += ticket.show() + "\n\n";
                 }
             }
             return new Response(info.trim());

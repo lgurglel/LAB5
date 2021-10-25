@@ -29,10 +29,6 @@ public class ExecuteScriptCommand extends Command {
 
     @Override
     public Response execute(Scanner scanner) {
-        if (parameter != null&&parameter.equals("")) {
             return collectionManager.executeExecuteScriptCommand(fileManager, parameter, scanner);
-        }else {
-            return new Response("Неверный формат параметра");
-        }
     }
 }

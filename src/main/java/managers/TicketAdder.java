@@ -131,8 +131,7 @@ public class TicketAdder {
                 }
             } else
                 scanner.write("Скидка не установлена.");
-            discount = 0L;
-            return discount;
+            return null;
         } catch (Exception e) {
             scanner.write("Неверный формат скидки, если нет скидки, то просто нажмите 'Enter'");
             return createNewDiscount(scanner);
@@ -147,7 +146,7 @@ public class TicketAdder {
             return comment;
         } else
             scanner.write("Комментарий не установлен.");
-        return "";
+        return null;
     }
 
     // TODO: 21.10.2021
@@ -156,10 +155,11 @@ public class TicketAdder {
             scanner.write("Выберете и введите из списка тип билета: " + TicketType.nameList());
             String typeStr = scanner.read();
             if (typeStr != null) {
+                if(typeStr.isEmpty()) return null;
                 return TicketType.valueOf(typeStr.toUpperCase(Locale.ROOT));
             } else
                 scanner.write("Тип билета не установлен.");
-            return null;
+                return null;
         } catch (Exception e) {
             scanner.write("Ошибка. Некорректный тип. Введите тип из перечисленных.");
             return createNewType(scanner);
@@ -234,7 +234,7 @@ public class TicketAdder {
             return name;
         } else
             scanner.write("ZipCode не установлен.");
-        return "";
+        return null;
     }
 
     private Address createNewAddress(Scanner scanner) {

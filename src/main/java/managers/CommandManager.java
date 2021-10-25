@@ -6,6 +6,7 @@ import consoleWork.Scanner;
 import consoleWork.ScriptScanner;
 import fileWork.FileManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,11 +59,11 @@ public class CommandManager {
             command = new RemoveGreaterCommand(collectionManager);
         } else if (commandName.equals(new FilterByPriceCommand().toString())) {
             command = new FilterByPriceCommand(collectionManager, getParameter(request, scanner));
-        } else if (commandName.equals(new RemoveAllByPriceCommand().toString())){
-            command = new RemoveAllByPriceCommand(collectionManager, getParameter(request,scanner));
-        }else if (commandName.equals(new ReorderCommand().toString())){
+        } else if (commandName.equals(new RemoveAllByPriceCommand().toString())) {
+            command = new RemoveAllByPriceCommand(collectionManager, getParameter(request, scanner));
+        } else if (commandName.equals(new ReorderCommand().toString())) {
             command = new ReorderCommand(collectionManager);
-        }else if(commandName.equals(new SortCommand().toString())){
+        } else if (commandName.equals(new SortCommand().toString())) {
             command = new SortCommand(collectionManager);
         }
         if (command == null) {
@@ -70,22 +71,19 @@ public class CommandManager {
             return;
         } else {
             Response response = command.execute(scanner);
-            if (request.contains(new ExecuteScriptCommand().toString())) {
-                if (response.getMessage().split("\n")[0].equals("false")) {
+            if (command.toString().equals(new ExecuteScriptCommand().toString())) {
+                if (response.getMessage().equals("false")) {
                     scanner.write("Проблема с запуском скрипта");
                 } else {
-                    boolean isStarted = false;
-                    String filePath = getParameter(request, scanner);
-                    for (String scriptFile : scriptsFiles) {
-                        if (scriptFile.equals(filePath)) {
-                            isStarted = true;
-                        }
-                    }
-                    if (isStarted) {
+                    String filePath = new File(getParameter(request, scanner)).getAbsolutePath();
+                    if (scriptsFiles.contains(filePath)) {
                         scanner.write("\nРекурсия!");
+                        scriptsFiles.clear();
+                        return;
                     } else {
                         scriptsFiles.add(filePath);
                         executeScript(response.getMessage());
+                        scriptsFiles.remove(filePath);
                     }
                 }
             } else {
@@ -96,7 +94,7 @@ public class CommandManager {
 
     private void executeScript(String script) {
         Scanner scanner = new ScriptScanner(script);
-        while (true) {
+        while (!scriptsFiles.isEmpty()) {
             String command = scanner.read();
             if (command == null) {
                 break;

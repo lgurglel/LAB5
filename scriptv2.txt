@@ -1,0 +1,2 @@
+help
+execute_script scriptv2.txt
